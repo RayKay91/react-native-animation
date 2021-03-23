@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useRef } from 'react';
-import { StyleSheet, View, Animated, Button } from 'react-native';
+import { StyleSheet, View, Animated, Pressable, Text } from 'react-native';
 
 export default function App() {
 
@@ -46,8 +46,10 @@ export default function App() {
         <Animated.View style={ [ styles.animatedView, { transform: [ { translateX: moveS } ] } ] }></Animated.View>
         <Animated.View style={ [ styles.animatedView, { position: 'absolute', backgroundColor: 'peru', transform: [ { translateX: moveP } ] } ] }></Animated.View>
       </View>
-      <Button title='Click me to move the view right' onPress={ moveRight } />
-      <Button title='Click me to move the view left' onPress={ moveLeft } />
+      <Pressable style={ { marginTop: 30 } } onPressIn={ moveRight } onPressOut={ moveLeft } >
+        <Text  >Animate Box</Text>
+      </Pressable>
+
     </View >
   );
 }
