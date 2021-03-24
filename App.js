@@ -44,16 +44,24 @@ export default function App() {
     <View style={ styles.container }>
       <View style={ { borderWidth: 1 } }>
         <Animated.View style={ [ styles.animatedView, {
-          opacity: moveS.interpolate( {
-            inputRange: [ 0, 600 ],
-            outputRange: [ 1, 0 ]
-          } ), transform: [ { translateX: moveS } ]
+          transform: [ {
+            translateX: moveS,
+          }, {
+            scale: moveS.interpolate( {
+              inputRange: [ 0, 600 ],
+              outputRange: [ 1, 0 ]
+            } )
+          } ]
         } ] }></Animated.View>
         <Animated.View style={ [ styles.animatedView, {
-          position: 'absolute', backgroundColor: 'peru', transform: [ { translateX: moveP } ], opacity: moveP.interpolate( {
-            inputRange: [ -600, 0 ],
-            outputRange: [ 0, 1 ]
-          } )
+          position: 'absolute', backgroundColor: 'peru', transform: [ {
+            translateX: moveP
+          }, {
+            scale: moveP.interpolate( {
+              inputRange: [ -600, 0 ],
+              outputRange: [ 0, 1 ]
+            } )
+          } ]
         } ] } ></Animated.View>
       </View>
       <Pressable style={ { marginTop: 30 } } onPressIn={ moveRight } onPressOut={ moveLeft } >
