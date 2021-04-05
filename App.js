@@ -1,88 +1,41 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useRef } from 'react';
-import { StyleSheet, View, Animated, Pressable, Text } from 'react-native';
+import { StyleSheet, View, Animated, Pressable, Text, PanResponder } from 'react-native';
 
 export default function App() {
 
-  const moveS = useRef( new Animated.Value( 0 ) ).current
-  const moveP = useRef( new Animated.Value( -600 ) ).current
-
-
-  const moveRight = () => {
-    Animated.timing( moveS, {
-      toValue: 600,
-      duration: 165,
-      useNativeDriver: true
+  const touch = useRef( new Animated.ValueXY() ).current
+  const panResponder = useRef( PanResponder.create( {
+    onMoveShouldSetPanResponder: () => true,
+    onPanResponderGrant: () => touch.setOffset( { x: touch.x._value, y: touch.y._value } ),
+    onPanResponderMove: Animated.event( [ null, { dx: touch.x, dy: touch.y } ], { useNativeDriver: false } ),
+    onPanResponderRelease: () => {
+      touch.flattenOffset()
     }
+  } ) ).current
 
-    ).start()
 
-    Animated.timing( moveP, {
-      toValue: 0,
-      duration: 165,
-      useNativeDriver: true
-    }
-
-    ).start()
-  }
-
-  const moveLeft = () => {
-    Animated.timing( moveS, {
-      toValue: 0,
-      duration: 165,
-      useNativeDriver: true
-    } ).start()
-
-    Animated.timing( moveP, {
-      toValue: -600,
-      duration: 165,
-      useNativeDriver: true
-    } ).start()
-  }
 
   return (
-    <View style={ styles.container }>
-      <View style={ { borderWidth: 1 } }>
-        <Animated.View style={ [ styles.animatedView, {
-          transform: [ {
-            translateX: moveS,
-          }, {
-            scale: moveS.interpolate( {
-              inputRange: [ 0, 600 ],
-              outputRange: [ 1, 0 ]
-            } )
-          } ]
-        } ] }></Animated.View>
-        <Animated.View style={ [ styles.animatedView, {
-          position: 'absolute', backgroundColor: 'peru', transform: [ {
-            translateX: moveP
-          }, {
-            scale: moveP.interpolate( {
-              inputRange: [ -600, 0 ],
-              outputRange: [ 0, 1 ]
-            } )
-          } ]
-        } ] } ></Animated.View>
-      </View>
-      <Pressable style={ { marginTop: 30 } } onPressIn={ moveRight } onPressOut={ moveLeft } >
-        <Text  >Animate Box</Text>
-      </Pressable>
+    <View style={ styles.container }
+    >
+      <Animated.View style={ [ styles.square, touch.getLayout() ] }  { ...panResponder.panHandlers } >
 
-    </View >
+      </Animated.View>
+    </View>
+
   );
 }
 
 const styles = StyleSheet.create( {
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
     justifyContent: 'center',
+    alignItems: 'center'
   },
-  animatedView: {
-    backgroundColor: 'salmon',
+  square: {
     height: 100,
     width: 100,
-    position: 'relative'
+    backgroundColor: 'peru'
   }
 } );
